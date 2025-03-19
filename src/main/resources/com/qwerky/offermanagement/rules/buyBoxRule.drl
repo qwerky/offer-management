@@ -1,6 +1,6 @@
 package com.qwerky.offermanagement.rules;
 
-import com.qwerky.offermanagement.model;
+import com.qwerky.offermanagement.model.Offer;
 
 rule "Buy Box rule to determine which offer is valid"
 when
@@ -37,7 +37,6 @@ then
 end
 
 // Helper function to retract non-banner offers
-declare function retractOthers
 function void retractOthers() {
     for (Offer offer : offers) {
         if (!"BQUK".equals(offer.getSeller().getName())) {
