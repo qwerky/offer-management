@@ -1,0 +1,48 @@
+package com.qwerky.offermanagement.rules;
+
+import com.qwerky.offermanagement.model;
+
+rule "Buy Box rule to determine which offer is valid"
+when
+    $bannerOffer : Offer(seller.name == "BQUK")
+then
+    $bannerOffer.setValid(true);
+    update($bannerOffer);
+
+    // Invalidate all other offers
+    retractOthers();
+end
+
+rule "Mark Lowest Price Offer as Valid if no banner offers"
+salience -10 // Runs only if the banner rule doesn't fire
+when
+    not Offer(seller.name == "BQUK")
+    $lowestOffer : Offer() from accumulate(
+        Offer($price : pricing.currentPrice),
+        min($price)
+    )
+then
+    $lowestOffer.setValid(true);
+    update($lowestOffer);
+end
+
+rule "Invalidate Other Offers"
+salience -20
+when
+    $invalidOffer : Offer(valid == true)
+    $otherOffer : Offer(valid == false || valid == true, this != $invalidOffer)
+then
+    $otherOffer.setValid(false);
+    update($otherOffer);
+end
+
+// Helper function to retract non-banner offers
+declare function retractOthers
+function void retractOthers() {
+    for (Offer offer : offers) {
+        if (!"BQUK".equals(offer.getSeller().getName())) {
+            offer.setValid(false);
+            update(offer);
+        }
+    }
+}
