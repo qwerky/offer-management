@@ -25,6 +25,7 @@ public class RuleService {
 
         KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem);
         Results results = kieBuilder.buildAll().getResults();
+        // Should warn in results == 0?
 
         kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
     }

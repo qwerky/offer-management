@@ -20,7 +20,8 @@ import java.util.List;
 @Component
 public class EventManager {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Value("${kafka.topics.valid-offers}")
     private String validOffersTopic;
@@ -36,10 +37,6 @@ public class EventManager {
 
     @Autowired
     private ValidOfferRepository validOfferRepository;
-
-    public EventManager(final KafkaTemplate<String, String> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
 
 
     @KafkaListener(topics = "#{@environment.getProperty('kafka.topics.candidate-offers')}")
@@ -76,7 +73,7 @@ public class EventManager {
     public void send(final Offer offer) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            kafkaTemplate.send(validOffersTopic, offer.getId(), mapper.writeValueAsString(offer));
+            kafkaTemplate.send(validOffersTopic, mapper.writeValueAsString(offer));
         } catch (JsonProcessingException ex) {
             throw new RuntimeException(ex);
         }
