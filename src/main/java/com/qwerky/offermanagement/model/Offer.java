@@ -1,5 +1,7 @@
 package com.qwerky.offermanagement.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -115,5 +117,15 @@ public class Offer {
 
     public void setFulfilmentOptions(Fulfilment[] fulfilmentOptions) {
         this.fulfilmentOptions = fulfilmentOptions;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return EqualsBuilder.reflectionEquals(this, other, true);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(valid).append(type).append(channelExclusions).append(tennant).append(seller).append(gspr).append(product).append(pricing).append(taxes).append(promotions).append(fulfilmentOptions).toHashCode();
     }
 }

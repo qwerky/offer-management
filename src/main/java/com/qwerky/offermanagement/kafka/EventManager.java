@@ -55,7 +55,7 @@ public class EventManager {
 
         // Persist any valid offers and send events
         for (Offer offer : offers) {
-            if (offer.isValid()) {
+            if (offer.isValid() && !validOfferRepository.isCurrent(offer)) {
                 send(offer);
                 validOfferRepository.save(offer);
             } else {

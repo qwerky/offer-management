@@ -9,6 +9,6 @@ import java.util.List;
 /**
  * MongoDB repository for data access of valid offers.
  */
-public interface ValidOfferRepository extends MongoRepository<Offer, String> {
+public interface ValidOfferRepository extends CustomMongoRepository, MongoRepository<Offer, String> {
 
 }
