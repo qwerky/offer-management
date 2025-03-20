@@ -51,7 +51,7 @@ public class RuleTest {
      * @throws JsonProcessingException
      */
     @Test
-    public void testBannerRule() throws JsonProcessingException {
+    public void testBannerOfferReplacesMarketplaceOffer() throws JsonProcessingException {
         Product product = new Product();
         product.setEan("51234567");
 
@@ -77,12 +77,15 @@ public class RuleTest {
         // Prepare Mocks
         ArgumentCaptor<Offer> offerCaptor = ArgumentCaptor.forClass(Offer.class);
 
-        // candidateOfferRepository should get a findByEan() with the product EAN, and should return the marketplaceOffer
+        // candidateOfferRepository should get a findByEan() with the product EAN, and should return both offers
         List<Offer> candidateOffers = List.of(marketplaceOffer, bannerOffer);
         when(candidateOfferRepository.findByEan(product.getEan())).thenReturn(candidateOffers);
 
         // validOfferRepository should get a existsById with the marketplace offer id and return true
         when(validOfferRepository.existsById(marketplaceOffer.getId())).thenReturn(true);
+
+        // validOfferRepository should get a isCurrent with the banner offer and return false as the banner offer is new
+        when(validOfferRepository.isCurrent(any())).thenReturn(false);
 
         // Execute test
         String message = new ObjectMapper().writeValueAsString(bannerOffer);
@@ -109,7 +112,7 @@ public class RuleTest {
      * Tests that a new offer with a lower price will replace an existing offer.
      */
     @Test
-    public void lowestPriceTest() throws JsonProcessingException {
+    public void testLowPriceOfferReplacesHighPriceOffer() throws JsonProcessingException {
         Product product = new Product();
         product.setEan("5434667");
 
@@ -117,49 +120,110 @@ public class RuleTest {
         highPrice.setCurrentPrice(10.00f);
         Seller seller1 = new Seller();
         seller1.setName("ACME supplies");
-        Offer offer1 = new Offer();
-        offer1.setId("highPrice");
-        offer1.setProduct(product);
-        offer1.setSeller(seller1);
-        offer1.setPricing(highPrice);
+        Offer highPriceOffer = new Offer();
+        highPriceOffer.setId("highPrice");
+        highPriceOffer.setProduct(product);
+        highPriceOffer.setSeller(seller1);
+        highPriceOffer.setPricing(highPrice);
 
         Pricing lowPrice = new Pricing();
         highPrice.setCurrentPrice(5.00f);
         Seller seller2 = new Seller();
         seller2.setName("Cheapo merchant");
-        Offer offer2 = new Offer();
-        offer2.setId("lowPrice");
-        offer2.setProduct(product);
-        offer2.setSeller(seller2);
-        offer2.setPricing(lowPrice);
+        Offer lowPriceOffer = new Offer();
+        lowPriceOffer.setId("lowPrice");
+        lowPriceOffer.setProduct(product);
+        lowPriceOffer.setSeller(seller2);
+        lowPriceOffer.setPricing(lowPrice);
 
         // Prepare Mocks
         ArgumentCaptor<Offer> offerCaptor = ArgumentCaptor.forClass(Offer.class);
 
-        // candidateOfferRepository should get a findByEan() with the product EAN, and should return the marketplaceOffer
-        List<Offer> candidateOffers = List.of(offer1, offer2);
+        // candidateOfferRepository should get a findByEan() with the product EAN, and should return both offers
+        List<Offer> candidateOffers = List.of(highPriceOffer, lowPriceOffer);
         when(candidateOfferRepository.findByEan(product.getEan())).thenReturn(candidateOffers);
 
         // validOfferRepository should get a existsById with the high price offer id and return true
-        when(validOfferRepository.existsById(offer1.getId())).thenReturn(true);
+        when(validOfferRepository.existsById(highPriceOffer.getId())).thenReturn(true);
+
+        // validOfferRepository should get a isCurrent with the low price offer and return false as the offer is new
+        when(validOfferRepository.isCurrent(any())).thenReturn(false);
 
         // Execute test
-        String message = new ObjectMapper().writeValueAsString(offer2);
+        String message = new ObjectMapper().writeValueAsString(lowPriceOffer);
         eventManager.receive(message);
 
         // candidateOfferRepository should get a save() with the low price offer
         verify(candidateOfferRepository).save(offerCaptor.capture());
-        assertEquals(offerCaptor.getValue().getId(), offer2.getId());
+        assertEquals(offerCaptor.getValue().getId(), lowPriceOffer.getId());
 
         // validOfferRepository should get a save with the low price offer, and the offer should be valid
         verify(validOfferRepository).save(offerCaptor.capture());
         assertTrue(offerCaptor.getValue().isValid());
-        assertEquals(offerCaptor.getValue().getId(), offer2.getId());
+        assertEquals(offerCaptor.getValue().getId(), lowPriceOffer.getId());
 
         // validOfferRepository should get a deleteById with the high price offer id
-        verify(validOfferRepository).deleteById(offer1.getId());
+        verify(validOfferRepository).deleteById(highPriceOffer.getId());
 
         // kafkaTemplate should send both offers to the validOffersTopic
         verify(kafkaTemplate, times(2)).send(eq(validOffersTopic), any());
+    }
+
+
+
+    /**
+     * Tests that a new offer with a higher price does not replace an existing offer with a lower price.
+     */
+    @Test
+    public void testHighPriceOfferDoesNotReplaceLowPriceOffer() throws JsonProcessingException {
+        Product product = new Product();
+        product.setEan("574466");
+
+        Pricing highPrice = new Pricing();
+        highPrice.setCurrentPrice(10.00f);
+        Seller seller1 = new Seller();
+        seller1.setName("ACME supplies");
+        Offer highPriceOffer = new Offer();
+        highPriceOffer.setId("highPrice");
+        highPriceOffer.setProduct(product);
+        highPriceOffer.setSeller(seller1);
+        highPriceOffer.setPricing(highPrice);
+
+        Pricing lowPrice = new Pricing();
+        highPrice.setCurrentPrice(5.00f);
+        Seller seller2 = new Seller();
+        seller2.setName("Cheapo merchant");
+        Offer lowPriceOffer = new Offer();
+        lowPriceOffer.setId("lowPrice");
+        lowPriceOffer.setProduct(product);
+        lowPriceOffer.setSeller(seller2);
+        lowPriceOffer.setPricing(lowPrice);
+
+        // Prepare Mocks
+        ArgumentCaptor<Offer> offerCaptor = ArgumentCaptor.forClass(Offer.class);
+
+        // candidateOfferRepository should get a findByEan() with the product EAN, and should return both offers
+        List<Offer> candidateOffers = List.of(highPriceOffer, lowPriceOffer);
+        when(candidateOfferRepository.findByEan(product.getEan())).thenReturn(candidateOffers);
+
+        // validOfferRepository should get a isCurrent with the low price offer and return true as the offer is not new
+        when(validOfferRepository.isCurrent(any())).thenReturn(true);
+
+        // Execute test
+        String message = new ObjectMapper().writeValueAsString(highPriceOffer);
+        eventManager.receive(message);
+
+        // candidateOfferRepository should get a save() with the high price offer
+        verify(candidateOfferRepository).save(offerCaptor.capture());
+        assertEquals(offerCaptor.getValue().getId(), highPriceOffer.getId());
+
+        // validOfferRepository should not invoke save
+        verify(validOfferRepository, never()).save(any());
+
+        // validOfferRepository should not invoke delete
+        verify(validOfferRepository, never()).deleteById(any());
+
+        // kafkaTemplate should not send anything to the validOffersTopic
+        verify(kafkaTemplate, never()).send(eq(validOffersTopic), any());
     }
 }
