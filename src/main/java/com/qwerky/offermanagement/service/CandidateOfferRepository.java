@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface CandidateOfferRepository extends MongoRepository<Offer, String> {
 
-    @Query("{product.ean : ?0")
+    /**
+     * Find an offer by it's product EAN.
+     * @param ean the ean to match against
+     * @return a list of offers for the given product EAN
+     */
+    @Query("{product.ean : ?0}")
     List<Offer> findByEan(String ean);
 }
