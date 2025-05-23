@@ -56,7 +56,10 @@ public class RuleTest {
         product.setEan("51234567");
 
         Pricing pricing = new Pricing();
-        pricing.setCurrentPrice(10.00f);
+        pricing.setCurrency("GBP");
+        Pricing.Price defaultPrice = new Pricing.Price();
+        defaultPrice.setCurrentPrice(10.00f);
+        pricing.setDefaultPrice(defaultPrice);
 
         Seller bannerSeller = new Seller();
         bannerSeller.setName("BQUK");
@@ -117,7 +120,10 @@ public class RuleTest {
         product.setEan("5434667");
 
         Pricing highPrice = new Pricing();
-        highPrice.setCurrentPrice(10.00f);
+        highPrice.setCurrency("GBP");
+        Pricing.Price defaultHighPrice = new Pricing.Price();
+        defaultHighPrice.setCurrentPrice(10.00f);
+        highPrice.setDefaultPrice(defaultHighPrice);
         Seller seller1 = new Seller();
         seller1.setName("ACME supplies");
         Offer highPriceOffer = new Offer();
@@ -127,7 +133,10 @@ public class RuleTest {
         highPriceOffer.setPricing(highPrice);
 
         Pricing lowPrice = new Pricing();
-        highPrice.setCurrentPrice(5.00f);
+        lowPrice.setCurrency("GBP");
+        Pricing.Price defaultLowPrice = new Pricing.Price();
+        defaultLowPrice.setCurrentPrice(10.00f);
+        lowPrice.setDefaultPrice(defaultLowPrice);
         Seller seller2 = new Seller();
         seller2.setName("Cheapo merchant");
         Offer lowPriceOffer = new Offer();
@@ -180,7 +189,10 @@ public class RuleTest {
         product.setEan("574466");
 
         Pricing highPrice = new Pricing();
-        highPrice.setCurrentPrice(10.00f);
+        highPrice.setCurrency("GBP");
+        Pricing.Price defaultHighPrice = new Pricing.Price();
+        defaultHighPrice.setCurrentPrice(10.00f);
+        highPrice.setDefaultPrice(defaultHighPrice);
         Seller seller1 = new Seller();
         seller1.setName("ACME supplies");
         Offer highPriceOffer = new Offer();
@@ -190,7 +202,10 @@ public class RuleTest {
         highPriceOffer.setPricing(highPrice);
 
         Pricing lowPrice = new Pricing();
-        highPrice.setCurrentPrice(5.00f);
+        lowPrice.setCurrency("GBP");
+        Pricing.Price defaultLowPrice = new Pricing.Price();
+        defaultLowPrice.setCurrentPrice(10.00f);
+        lowPrice.setDefaultPrice(defaultLowPrice);
         Seller seller2 = new Seller();
         seller2.setName("Cheapo merchant");
         Offer lowPriceOffer = new Offer();

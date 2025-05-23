@@ -1,0 +1,118 @@
+{
+  "id": "1P-54321-BQUK",
+  "valid": true,
+  "type": "1P",
+  "channelExclusions": {
+    "visible": ["345"],
+    "sellable": ["234"],
+    "discoverable": ["123"]
+  },
+  "tennant": "BQUK",
+  "seller": {
+    "id": "BQUK",
+    "name": "B & Q"
+  },
+  "gspr": {
+    "manufacturer": "ACME corp",
+    "euRepresentative": "someone@example.com",
+    "email": "anyone@example.com",
+    "addressLine1": "Unit 4a",
+    "addressLine2": "10 Any Street",
+    "city": "Anytown",
+    "postcode": "AA1 1AA",
+    "country": "United Kingdom"
+  },
+  "product": {
+    "ean": "54321"
+  },
+  "pricing": {
+    "currency": "GBP",
+    "local": [
+      {
+        "stores": ["123", "456", "789"],
+        "wasPrice": [18.0],
+        "currentPrice": 15.0,
+        "unitPrice": 7.5,
+        "exVatWasPrice": [15.0],
+        "exVatCurrentPrice": 12.0,
+        "exVatUnitPrice": 6.0
+      }
+    ],
+    "default": {
+      "wasPrice": [15.0],
+      "currentPrice": 12.0,
+      "unitPrice": 6.0,
+      "exVatWasPrice": [12.5],
+      "exVatCurrentPrice": 10.0,
+      "exVatUnitPrice": 5.0
+    }
+  },
+  "taxes": {
+    "default": [
+      {
+        "code": "VAT",
+        "rate": 0.2,
+        "amount": 2.0
+      }
+    ],
+    "local": [
+      {
+        "stores": ["123", "456"],
+        "taxes": [
+          {
+            "code": "ECO",
+            "rate": 0.05,
+            "amount": 0.5
+          },
+          {
+            "code": "VAT",
+            "rate": 0.2,
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "stores": ["789"],
+        "taxes": [
+          {
+            "code": "VAT",
+            "rate": 0.1,
+            "amount": 1.0
+          }
+        ]
+      }
+    ]
+  },
+  "promotions": [
+    {
+      "identifier": "12345",
+      "description": "Black Friday Gardening Sale"
+    }
+  ],
+  "fulfilmentOptions": [
+    {
+      "name": "Next day click and collect",
+      "shortMessage": "Order by 7pm for next day collection",
+      "longMessage": "Orders placed on Sunday will be available to collect from Tuesday",
+      "code": "CC1",
+      "availability": {
+        "stores": ["123", "456", "789"]
+      },
+      "minDeliveryDays": 1,
+      "maxDeliveryDays": 1,
+      "shippingPrice": 0.0
+    },
+    {
+      "name": "Standard Shipping",
+      "shortMessage": "Choose your delivery date in checkout",
+      "longMessage": "Delivery from next working day",
+      "code": "STD",
+      "availability": {
+        "zone": "ESWM"
+      },
+      "minDeliveryDays": 3,
+      "maxDeliveryDays": 5,
+      "shippingPrice": 3.99
+    }
+  ]
+}

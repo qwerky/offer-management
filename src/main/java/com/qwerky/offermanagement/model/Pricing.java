@@ -1,19 +1,18 @@
 package com.qwerky.offermanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Pricing {
 
     private String currency;
-    private String[] stores;
 
-    private float[] wasPrice;
-    private float currentPrice;
-    private float unitPrice;
+    @JsonProperty("default")
+    private Price defaultPrice;
 
-    private float[] exVatWasPrice;
-    private float exVatCurrentPrice;
-    private float exVatUnitPrice;
-
-    private Pricing[] local;
+    @JsonProperty("local")
+    private Price[] localPrice;
 
     public String getCurrency() {
         return currency;
@@ -23,67 +22,88 @@ public class Pricing {
         this.currency = currency;
     }
 
-    public String[] getStores() {
-        return stores;
+    public Price getDefaultPrice() {
+        return defaultPrice;
     }
 
-    public void setStores(String[] stores) {
-        this.stores = stores;
+    public void setDefaultPrice(Price defaultPrice) {
+        this.defaultPrice = defaultPrice;
     }
 
-    public float[] getWasPrice() {
-        return wasPrice;
+    public Price[] getLocal() {
+        return localPrice;
     }
 
-    public void setWasPrice(float[] wasPrice) {
-        this.wasPrice = wasPrice;
+    public void setLocal(Price[] local) {
+        this.localPrice = local;
     }
 
-    public float getCurrentPrice() {
-        return currentPrice;
-    }
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Price {
+        private String[] stores;
+        private float[] wasPrice;
+        private float currentPrice;
+        private float unitPrice;
 
-    public void setCurrentPrice(float currentPrice) {
-        this.currentPrice = currentPrice;
-    }
+        private float[] exVatWasPrice;
+        private float exVatCurrentPrice;
+        private float exVatUnitPrice;
 
-    public float getUnitPrice() {
-        return unitPrice;
-    }
+        public String[] getStores() {
+            return stores;
+        }
 
-    public void setUnitPrice(float unitPrice) {
-        this.unitPrice = unitPrice;
-    }
+        public void setStores(String[] stores) {
+            this.stores = stores;
+        }
 
-    public float[] getExVatWasPrice() {
-        return exVatWasPrice;
-    }
+        public float[] getWasPrice() {
+            return wasPrice;
+        }
 
-    public void setExVatWasPrice(float[] exVatWasPrice) {
-        this.exVatWasPrice = exVatWasPrice;
-    }
+        public void setWasPrice(float[] wasPrice) {
+            this.wasPrice = wasPrice;
+        }
 
-    public float getExVatCurrentPrice() {
-        return exVatCurrentPrice;
-    }
+        public float getCurrentPrice() {
+            return currentPrice;
+        }
 
-    public void setExVatCurrentPrice(float exVatCurrentPrice) {
-        this.exVatCurrentPrice = exVatCurrentPrice;
-    }
+        public void setCurrentPrice(float currentPrice) {
+            this.currentPrice = currentPrice;
+        }
 
-    public float getExVatUnitPrice() {
-        return exVatUnitPrice;
-    }
+        public float getUnitPrice() {
+            return unitPrice;
+        }
 
-    public void setExVatUnitPrice(float exVatUnitPrice) {
-        this.exVatUnitPrice = exVatUnitPrice;
-    }
+        public void setUnitPrice(float unitPrice) {
+            this.unitPrice = unitPrice;
+        }
 
-    public Pricing[] getLocal() {
-        return local;
-    }
+        public float[] getExVatWasPrice() {
+            return exVatWasPrice;
+        }
 
-    public void setLocal(Pricing[] local) {
-        this.local = local;
+        public void setExVatWasPrice(float[] exVatWasPrice) {
+            this.exVatWasPrice = exVatWasPrice;
+        }
+
+        public float getExVatCurrentPrice() {
+            return exVatCurrentPrice;
+        }
+
+        public void setExVatCurrentPrice(float exVatCurrentPrice) {
+            this.exVatCurrentPrice = exVatCurrentPrice;
+        }
+
+        public float getExVatUnitPrice() {
+            return exVatUnitPrice;
+        }
+
+        public void setExVatUnitPrice(float exVatUnitPrice) {
+            this.exVatUnitPrice = exVatUnitPrice;
+        }
+
     }
 }

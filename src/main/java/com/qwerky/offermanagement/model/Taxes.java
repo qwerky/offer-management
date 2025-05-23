@@ -6,6 +6,8 @@ public class Taxes {
 
     @JsonProperty("default")
     private Tax[] defaultTaxes;
+
+    @JsonProperty("local")
     private LocalTax[] localTaxes;
 
     public Tax[] getDefaultTaxes() {
@@ -23,56 +25,57 @@ public class Taxes {
     public void setLocalTaxes(LocalTax[] localTaxes) {
         this.localTaxes = localTaxes;
     }
-}
 
-class LocalTax {
-    private String[] stores;
-    private Tax[] taxes;
 
-    public String[] getStores() {
-        return stores;
+    public static class LocalTax {
+        private String[] stores;
+        private Tax[] taxes;
+
+        public String[] getStores() {
+            return stores;
+        }
+
+        public void setStores(String[] stores) {
+            this.stores = stores;
+        }
+
+        public Tax[] getTaxes() {
+            return taxes;
+        }
+
+        public void setTaxes(Tax[] taxes) {
+            this.taxes = taxes;
+        }
     }
 
-    public void setStores(String[] stores) {
-        this.stores = stores;
-    }
 
-    public Tax[] getTaxes() {
-        return taxes;
-    }
+    public static class Tax {
+        private String code;
+        private float rate;
+        private float amount;
 
-    public void setTaxes(Tax[] taxes) {
-        this.taxes = taxes;
-    }
-}
+        public String getCode() {
+            return code;
+        }
 
+        public void setCode(String code) {
+            this.code = code;
+        }
 
-class Tax {
-    private String code;
-    private float rate;
-    private float amount;
+        public float getRate() {
+            return rate;
+        }
 
-    public String getCode() {
-        return code;
-    }
+        public void setRate(float rate) {
+            this.rate = rate;
+        }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+        public float getAmount() {
+            return amount;
+        }
 
-    public float getRate() {
-        return rate;
-    }
-
-    public void setRate(float rate) {
-        this.rate = rate;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
+        public void setAmount(float amount) {
+            this.amount = amount;
+        }
     }
 }

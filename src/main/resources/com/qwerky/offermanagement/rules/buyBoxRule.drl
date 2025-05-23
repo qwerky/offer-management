@@ -17,9 +17,9 @@ end
 rule "Select Lowest Price Offer if no banner offers"
 when
     not Offer(seller.name == "BQUK")
-    $lowestPriceOffer : Offer($price : pricing.currentPrice)
-    not(Offer(pricing.currentPrice < $price, seller.name != "BQUK"))
-    $nonLowestOffers : Offer(pricing.currentPrice > $price)
+    $lowestPriceOffer : Offer($price : pricing.defaultPrice.currentPrice)
+    not(Offer(pricing.defaultPrice.currentPrice < $price, seller.name != "BQUK"))
+    $nonLowestOffers : Offer(pricing.defaultPrice.currentPrice > $price)
 then
     $lowestPriceOffer.setValid(true);
     update($lowestPriceOffer);

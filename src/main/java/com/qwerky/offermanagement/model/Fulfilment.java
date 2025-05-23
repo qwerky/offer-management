@@ -1,5 +1,7 @@
 package com.qwerky.offermanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class Fulfilment {
 
     private String name;
@@ -74,26 +76,28 @@ public class Fulfilment {
     public void setShippingPrice(float shippingPrice) {
         this.shippingPrice = shippingPrice;
     }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Availability {
+
+        private String zone;
+        private String[] stores;
+
+        public String getZone() {
+            return zone;
+        }
+
+        public void setZone(String zone) {
+            this.zone = zone;
+        }
+
+        public String[] getStores() {
+            return stores;
+        }
+
+        public void setStores(String[] stores) {
+            this.stores = stores;
+        }
+    }
 }
 
-class Availability {
-
-    private String zone;
-    private String[] stores;
-
-    public String getZone() {
-        return zone;
-    }
-
-    public void setZone(String zone) {
-        this.zone = zone;
-    }
-
-    public String[] getStores() {
-        return stores;
-    }
-
-    public void setStores(String[] stores) {
-        this.stores = stores;
-    }
-}
